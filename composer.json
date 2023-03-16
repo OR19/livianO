@@ -1,0 +1,18 @@
+{
+    "name": "or19/liviano",
+    "description": "LivianO es un framework de php sencillo, inicialmente para proyectos sencillos",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Liviano\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Orlando Martínez",
+            "email": "orlandomc19@gmail.com"
+        }
+    ],
+    "require": {}
+}
