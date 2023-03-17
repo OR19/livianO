@@ -5,7 +5,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Liviano\\": "src/"
+            "Liviano\\": "src/",
+            "Liviano\\Core\\": "src/Core/"
         }
     },
     "authors": [
