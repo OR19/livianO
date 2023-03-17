@@ -1,5 +1,9 @@
 <?php
 namespace Liviano\Core;
+/**
+ * Enumera los diferentes métodos HTTP
+ * @author Orlando Martínez
+ */
 enum ERequestMethods : string {
     case GET = 'GET';
     case POST = 'POST';
