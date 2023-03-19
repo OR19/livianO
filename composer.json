@@ -6,7 +6,8 @@
     "autoload": {
         "psr-4": {
             "Liviano\\": "src/",
-            "Liviano\\Core\\": "src/Core/"
+            "Liviano\\Core\\": "src/Core/",
+            "Liviano\\Core\\ParamMatchers\\": "src/Core/ParamMatchers"
         }
     },
     "authors": [
@@ -15,5 +16,7 @@
             "email": "orlandomc19@gmail.com"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    }
 }
