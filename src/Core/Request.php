@@ -21,10 +21,19 @@ class Request {
         $this->get_params = [];
         $this->seconds_start = -1;
     }
+    /**
+     * Obtiene los datos recibidos por el método POST
+     * @return array Datos recibidos
+     */
     public function getPostParams(): array {
         return $this->post_params;
     }
-    public function addPostParam( mixed $key, mixed $value ): void {
+    /**
+     * Agregar un elemento al arreglo PostParams
+     * @param string $key Llave asociativa al valor
+     * @param mixed $value Valor a insertar
+     */
+    public function addPostParam( string $key, mixed $value ): void {
         $this->post_params[ $key ] = $value;
     }
     /**
