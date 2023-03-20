@@ -7,7 +7,9 @@
         "psr-4": {
             "Liviano\\": "src/",
             "Liviano\\Core\\": "src/Core/",
-            "Liviano\\Core\\ParamMatchers\\": "src/Core/ParamMatchers"
+            "Liviano\\ParamMatchers\\": "src/ParamMatchers/",
+            "Liviano\\Routes\\": "src/Routes/",
+            "Liviano\\Exceptions\\": "src/Exceptions/"
         }
     },
     "authors": [
