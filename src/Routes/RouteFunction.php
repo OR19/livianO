@@ -12,6 +12,7 @@ class RouteFunction extends Route {
      */
     private array $paramPathMatches;
     private bool $canRecievePostJson;
+    private string $route_regex;
     private string $pathRegisted;
     /**
      * @var callable
@@ -30,6 +31,7 @@ class RouteFunction extends Route {
         $this->function = $function;
         $this->paramPathMatches = [];
         $this->canRecievePostJson = false;
+        $this->route_regex = $this->generateRoutePathMatcher( $this->cleanRoutePath( $this->pathRegisted ), $this->paramPathMatches );
     }
     /**
      * Establece que recivirá un JSON por el método POST
@@ -56,8 +58,7 @@ class RouteFunction extends Route {
      * @return string Expresión regular
      */
     public function getRouteRegex(): string {
-        $regex = $this->generateRoutePathMatcher( $this->cleanRoutePath( $this->pathRegisted ), $this->paramPathMatches );
-        return $regex;
+        return $this->route_regex;
     }
 }
 ?>
