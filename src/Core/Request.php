@@ -5,17 +5,27 @@ namespace Liviano\Core;
  * @author Orlando Martínez
  */
 class Request {
-    private ERequestMethods $method;
+    private HttpMethods $method;
     private array $data;
     private string $url;
     private float $seconds_start;
+    private array $post_params;
+    private array $get_params;
 
 
     public function __construct() {
-        $this->method = ERequestMethods::fromString( $_SERVER[ 'REQUEST_METHOD' ] );
+        $this->method = HttpMethods::NOMETHOD;
         $this->url = '';
         $this->data = [];
+        $this->post_params = [];
+        $this->get_params = [];
         $this->seconds_start = -1;
+    }
+    public function getPostParams(): array {
+        return $this->post_params;
+    }
+    public function addPostParam( mixed $key, mixed $value ): void {
+        $this->post_params[ $key ] = $value;
     }
     /**
      * Calcula los segundos transcurridos a partir de los segundos
@@ -28,16 +38,16 @@ class Request {
     }
     /**
      * Establece el método HTTP
-     * @param ERequestMethods $method Método HTTP
+     * @param HttpMethods $method Método HTTP
      */
-    public function setMethod( ERequestMethods $method ): void {
+    public function setMethod( HttpMethods $method ): void {
         $this->method = $method;
     }
     /**
      * Obtiene el método HTTP
-     * @return ERequestMethods Método HTTP
+     * @return HttpMethods Método HTTP
      */
-    public function getMethod(): ERequestMethods {
+    public function getMethod(): HttpMethods {
         return $this->method;
     }
     /**
