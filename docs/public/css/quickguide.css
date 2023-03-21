@@ -1,0 +1,37 @@
+body {
+    background-color: var(--color-primary);
+}
+.header {
+    padding: 2rem 0;
+    width: 100%;
+    height: calc(100dvh - 50px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+.header-title {
+    display: flex;
+    align-items: center;
+}
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+.primera-vista{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--color-terciary);
+}
+.primera-vista-codigo {
+    width: clamp(500px, 70dvw, 800px);
+    min-height: 400px;
+    max-height: 800px;
+    height: 40dvh;
+    transform: translateY(-45%);
+}
+.footer {
+    height: clamp(400px, 60dvh, 700px);
+    background-color: var(--color-text);
+}

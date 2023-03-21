@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LivianO</title>
+    <link rel="stylesheet" href="public/css/main.css">
+    <link rel="stylesheet" href="public/css/index.css">
+    <link rel="stylesheet" href="public/css/an-old-hope.css">
+    <script src="public/js/highlight.min.js"></script>
+</head>
+<body>
+    <nav class="nav-main">
+        <a class="nav-main-logo" href="/"><p>Liviano</p><img class="nav-main-logo-img" src="public/assets/pluma.png"></a>
+        <div class="nav-main-links">
+            <a class="nav-main-link" href="/docs/quickguide.html">Guía rápida</a>
+            <a class="nav-main-link" href="#">Documentación</a>
+        </div>
+    </nav>
+    <main class="main">
+        <header class="header">
+            <div class="header-title">
+                <h1 class="text-size-h1-ultra">Liviano</h1>
+                <img src="public/assets/pluma.png">
+            </div>
+            <p class="header-description"><span class="text-color-accent">Liviano</span> es un framework sencillo, inicialmente para proyectos sencillos</p>
+            <div class="header-actions">
+                <a class="button button--primary" href="#">Descargar</a>
+                <a class="button button--primary" href="#">Repositorio</a>
+            </div>
+        </header>
+        <section class="primera-vista">
+            <div class="primera-vista-codigo editor-codigo">
+                <div class="editor-codigo-toolbar"></div>
+                <div class="editor-codigo-tabs">
+                    <button class="editor-codigo-tab editor-codigo-tab--selected">MiArchivo.php</button>
+                </div>
+                <pre><code id="primera-vista-codigo" class="language-php"></code></pre>
+            </div>
+        </section>
+    </main>
+    <footer class="footer">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </footer>
+    <script>
+        window.addEventListener('load', (e) => {
+            const nodoCodigo = document.getElementById('primera-vista-codigo');
+            nodoCodigo.textContent = `<?php 
+    use Liviano\\Routes\\Router;
+    use Liviano\\ParamMatchers\\RouteParamIntMatcher;
+    use Liviano\\ParamMatchers\\RouteParamFloatMatcher;
+    use Liviano\\ParamMatchers\\RouteParamDateMatcher;
+    use Liviano\\ParamMatchers\\RouteParamStringMatcher;
+    Router::addRouteParamMatcher(
+        new RouteParamIntMatcher(),
+        new RouteParamFloatMatcher(),
+        new RouteParamDateMatcher(),
+        new RouteParamStringMatcher()
+    );
+    Router::get('/', function(){
+        echo "Hola mundo, estoy usando Liviano ❤";
+    });
+    Router::execute('/');
+?>`;
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+</html>
