@@ -144,13 +144,13 @@ class Router {
                 $route = $routeMethods[$request->getMethod()->value];
                 //Si la ruta la gestiona un controlador
                 if( $route instanceof RouteController ){
-                    $route->execute( $request, $response);
+                    $route->execute( $request, $response, Router::$dependenciesFactory);
                     $routeNotFound = false;
                     break;
                 }
                 //Si la ruta la gestionan funciones
                 elseif( $route instanceof RouteFunction ) {
-                    $route->execute( $request, $response);
+                    $route->execute( $request, $response, Router::$dependenciesFactory);
                     $routeNotFound = false;
                     break;
                 }
@@ -213,7 +213,7 @@ class Router {
         http_response_code(404);
         if( self::$handleNotFoundFunction != null ) {
             $f = new RouteFunction( $request->getURL(), self::$handleNotFoundFunction, self::$routeParamMatchers, self::$dependenciesFactory );
-            $f->execute( $request, $response );
+            $f->execute( $request, $response, Router::$dependenciesFactory );
         }
     }
     /**
