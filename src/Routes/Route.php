@@ -59,7 +59,7 @@ abstract class Route {
      * @param Response $response Objeto que gestiona la respuesta
      * @param array $dependenciasFactory Dependencias inyectadas solicitadas por la ruta
      */
-    abstract public function execute( Request $request, Response $response ): void;
+    abstract public function execute( Request $request, Response $response, array $dependenciasFactory): void;
     protected function getJsonPost(): array {
         $json = file_get_contents('php://input');
         return json_decode( $json, true ) ?? [];
