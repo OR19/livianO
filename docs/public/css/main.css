@@ -87,9 +87,11 @@
 .nav-main {
     padding: 0 2rem;
     position: sticky;
+    top: 0;
     display: flex;
     justify-content: space-between;
     background-color: var(--color-secundary);
+    z-index: 1;
 }
 .nav-main-logo{
     display: flex;
