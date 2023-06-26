@@ -27,7 +27,7 @@ abstract class RouteController extends Route {
 	 * @param Request $request Objeto que contiene la Información de la solicitud
 	 * @param Response $response Objeto que gestiona la respuesta
 	 */
-	public function execute(Request $request, Response $response): void {
+	public function execute(Request $request, Response $response, array $dependenciasFactory): void {
         $matches = [];
         $options = [];
         $reflection = $this->getFunction( $request->getURL(), $request->getMethod(), $matches, $options);
@@ -42,7 +42,7 @@ abstract class RouteController extends Route {
         }
 
         $this->executeMiddlewares($request, $response);
-        
+        $this->dependenciesFactory = $dependenciasFactory;
         $params = $this->generateInjectableParamsMethod( $reflection, $request, $response, $matches);
         $reflection->invokeArgs($this, $params);
 	}
