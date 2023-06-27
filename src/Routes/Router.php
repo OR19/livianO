@@ -1,6 +1,7 @@
 <?php
 namespace Liviano\Routes;
 
+use Exception;
 use Liviano\Core\HttpMethods;
 use Liviano\Core\MiddlewareWrapper;
 use Liviano\Core\Request;
@@ -25,6 +26,7 @@ class Router {
     private static array $globalAfterMiddlewares = [];
     private static array $routes = [];
     private static $handleNotFoundFunction = null;
+    private static $handleExceptionFunction = null;
     /**
      * Agrega param matchers
      */
@@ -126,6 +128,13 @@ class Router {
         self::$handleNotFoundFunction = $handler;
     }
     /**
+     * Agrega una función que manejará las excepciones producidas
+     * @param callable $handler Función
+     */
+    public static function addExceptionHandler(callable $handler): void {
+        self::$handleExceptionFunction = $handler;
+    }
+    /**
      * Ejecuta el ruteo por medio de una ruta
      * @param string $routePath Ruta que indica el recurso a solicitar
      */
@@ -134,30 +143,41 @@ class Router {
         //Creación de objetos request y response
         $request = Router::createRequestObject( $routePath );
         $response = new Response();
-        //Ejecutar los middleware globales (before)
-        if( !self::executeBeforeMiddlewares( $request, $response) ) return;
-        //Buscar la ruta que coincida con la solicitud
-        $routeNotFound = true;
-        foreach( self::$routes as $routeMatch => $routeMethods  ) {
-            //Si la ruta solicitada hace match con la registrada
-            if(preg_match_all($routeMatch, $routePath) > 0 && array_key_exists( $request->getMethod()->value, $routeMethods)) {
-                $route = $routeMethods[$request->getMethod()->value];
-                //Si la ruta la gestiona un controlador
-                if( $route instanceof RouteController ){
-                    $route->execute( $request, $response, Router::$dependenciesFactory);
-                    $routeNotFound = false;
-                    break;
-                }
-                //Si la ruta la gestionan funciones
-                elseif( $route instanceof RouteFunction ) {
-                    $route->execute( $request, $response, Router::$dependenciesFactory);
-                    $routeNotFound = false;
-                    break;
+        try {
+            //Ejecutar los middleware globales (before)
+            if( !self::executeBeforeMiddlewares( $request, $response) ) return;
+            //Buscar la ruta que coincida con la solicitud
+            $routeNotFound = true;
+            foreach( self::$routes as $routeMatch => $routeMethods  ) {
+                //Si la ruta solicitada hace match con la registrada
+                if(preg_match_all($routeMatch, $routePath) > 0 && array_key_exists( $request->getMethod()->value, $routeMethods)) {
+                    $route = $routeMethods[$request->getMethod()->value];
+                    //Si la ruta la gestiona un controlador
+                    if( $route instanceof RouteController ){
+                        $route->execute( $request, $response, Router::$dependenciesFactory);
+                        $routeNotFound = false;
+                        break;
+                    }
+                    //Si la ruta la gestionan funciones
+                    elseif( $route instanceof RouteFunction ) {
+                        $route->execute( $request, $response, Router::$dependenciesFactory);
+                        $routeNotFound = false;
+                        break;
+                    }
                 }
             }
+            if( $routeNotFound ) self::notFound($request, $response);
+            self::executeAfterMiddlewares( $request, $response );
         }
-        if( $routeNotFound ) self::notFound($request, $response);
-        self::executeAfterMiddlewares( $request, $response );
+        catch(Exception $ex){
+            if(self::$handleExceptionFunction != null) {
+                $request->setData('exception', $ex);
+                $request->setData('exception-time', time());
+                $f = new RouteFunction( $request->getURL(), self::$handleExceptionFunction, self::$routeParamMatchers, self::$dependenciesFactory );
+                $f->execute( $request, $response, Router::$dependenciesFactory );
+            }
+            else throw $ex;
+        }
     }
     /**
      * Ejecuta los middlewares (before)
