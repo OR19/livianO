@@ -1,7 +1,7 @@
 <?php
 namespace Liviano\Routes;
 
-use Exception;
+use ErrorException;
 use Liviano\Core\HttpMethods;
 use Liviano\Core\MiddlewareWrapper;
 use Liviano\Core\Request;
@@ -12,6 +12,8 @@ use Liviano\Exceptions\RouterRegisterRouteException;
 use Liviano\ParamMatchers\RouteParamMatcher;
 use ReflectionClass;
 use ReflectionFunction;
+use Throwable;
+
 /**
  * Provee funcionalidades de manejos de rutas
  */
@@ -143,6 +145,10 @@ class Router {
         //Creación de objetos request y response
         $request = Router::createRequestObject( $routePath );
         $response = new Response();
+        set_error_handler(function ($severity, $message, $file, $line) {
+            if (!(error_reporting() & $severity)) return;
+            throw new ErrorException($message, 0, $severity, $file, $line);
+        });
         try {
             //Ejecutar los middleware globales (before)
             if( !self::executeBeforeMiddlewares( $request, $response) ) return;
@@ -169,15 +175,18 @@ class Router {
             if( $routeNotFound ) self::notFound($request, $response);
             self::executeAfterMiddlewares( $request, $response );
         }
-        catch(Exception $ex){
+        catch(Throwable $ex) {
             if(self::$handleExceptionFunction != null) {
                 $request->setData('exception', $ex);
                 $request->setData('exception-time', time());
                 $f = new RouteFunction( $request->getURL(), self::$handleExceptionFunction, self::$routeParamMatchers, self::$dependenciesFactory );
                 $f->execute( $request, $response, Router::$dependenciesFactory );
             }
-            else throw $ex;
         }
+        // set_exception_handler(function(Throwable $ex) use (&$request, &$response) {
+            
+        // });
+        
     }
     /**
      * Ejecuta los middlewares (before)
