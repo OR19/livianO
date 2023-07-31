@@ -222,8 +222,13 @@ class Router {
         if( !Route::isRoutePathCorrect( $path ) ) throw new RouteFormatException();
         $route = new RouteFunction( $path, $handlerFunction, Router::$routeParamMatchers, Router::$dependenciesFactory );
         if( array_key_exists( $route->getRouteRegex(), Router::$routes ) ){
-            if( Router::$routes[ $route->getRouteRegex() ][ $method->value ] instanceof RouteController ){
-                throw new RouterRegisterRouteException("Ya existe un controlador asociado a esta ruta");
+            if( array_key_exists($method->value, Router::$routes[ $route->getRouteRegex() ]) ) {
+                if( Router::$routes[ $route->getRouteRegex() ][ $method->value ] instanceof RouteController ){
+                    throw new RouterRegisterRouteException("Ya existe un controlador asociado a esta ruta");
+                }
+                elseif (Router::$routes[ $route->getRouteRegex() ][ $method->value ] instanceof RouteFunction) {
+                    throw new RouterRegisterRouteException("Ya existe una función asociada a esta ruta");
+                }
             }
             Router::$routes[ $route->getRouteRegex() ][ $method->value ] = $route;
             return $route;
