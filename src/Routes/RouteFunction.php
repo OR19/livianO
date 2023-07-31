@@ -45,8 +45,7 @@ class RouteFunction extends Route {
             foreach( $json as $itemIndex => $itemValue )
                 $request->addPostParam( $itemIndex, $itemValue );
         }
-
-        $this->executeMiddlewares($request, $response);
+        if( !$this->executeMiddlewares($request, $response) ) return;
         $this->dependenciesFactory = $dependenciasFactory;
         $injectablesParams = $this->generateInjectableParams( $this->function, $request, $response, $this->paramPathMatches );
 

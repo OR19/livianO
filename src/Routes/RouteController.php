@@ -40,8 +40,7 @@ abstract class RouteController extends Route {
             foreach( $json as $itemIndex => $itemValue )
                 $request->addPostParam( $itemIndex, $itemValue );
         }
-
-        $this->executeMiddlewares($request, $response);
+        if( !$this->executeMiddlewares($request, $response) ) return;
         $this->dependenciesFactory = $dependenciasFactory;
         $params = $this->generateInjectableParamsMethod( $reflection, $request, $response, $matches);
         $reflection->invokeArgs($this, $params);
