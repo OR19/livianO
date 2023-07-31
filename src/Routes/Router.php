@@ -53,33 +53,37 @@ class Router {
      * Registra una ruta que será escuchada con el método HTTP GET
      * @param string $path Formato de ruta a escuchar
      * @param callable $handlerFunction Función que se manejará la petición
+     * @param bool $canRecievePostJson Si el valor es true, establece en el request los valores recibidos en el body
      */
-    public static function get( string $path, callable $handlerFunction ): Route {
-        return Router::addRouteFunction($path, HttpMethods::GET, $handlerFunction);
+    public static function get( string $path, callable $handlerFunction, bool $canRecievePostJson = false ): Route {
+        return Router::addRouteFunction($path, HttpMethods::GET, $handlerFunction, $canRecievePostJson);
     }
     /**
      * Registra una ruta que será escuchada con el método HTTP POST
      * @param string $path Formato de ruta a escuchar
      * @param callable $handlerFunction Función que se manejará la petición
+     * @param bool $canRecievePostJson Si el valor es true, establece en el request los valores recibidos en el body
      */
-    public static function post( string $path, callable $handlerFunction ): Route {
-        return Router::addRouteFunction($path, HttpMethods::POST, $handlerFunction);
+    public static function post( string $path, callable $handlerFunction, bool $canRecievePostJson = false ): Route {
+        return Router::addRouteFunction($path, HttpMethods::POST, $handlerFunction, $canRecievePostJson);
     }
     /**
      * Registra una ruta que será escuchada con el método HTTP PUT
      * @param string $path Formato de ruta a escuchar
      * @param callable $handlerFunction Función que se manejará la petición
+     * @param bool $canRecievePostJson Si el valor es true, establece en el request los valores recibidos en el body
      */
-    public static function put( string $path, callable $handlerFunction ): Route {
-        return Router::addRouteFunction($path, HttpMethods::PUT, $handlerFunction);
+    public static function put( string $path, callable $handlerFunction, bool $canRecievePostJson = false ): Route {
+        return Router::addRouteFunction($path, HttpMethods::PUT, $handlerFunction, $canRecievePostJson);
     }
     /**
      * Registra una ruta que será escuchada con el método HTTP DELETE
      * @param string $path Formato de ruta a escuchar
      * @param callable $handlerFunction Función que se manejará la petición
+     * @param bool $canRecievePostJson Si el valor es true, establece en el request los valores recibidos en el body
      */
-    public static function delete( string $path, callable $handlerFunction ): Route {
-        return Router::addRouteFunction($path, HttpMethods::DELETE, $handlerFunction);
+    public static function delete( string $path, callable $handlerFunction, bool $canRecievePostJson = false ): Route {
+        return Router::addRouteFunction($path, HttpMethods::DELETE, $handlerFunction, $canRecievePostJson);
     }
     /**
      * Registra una ruta que será escuchada por un controlador, el controlador escuchará todos los métodos
@@ -218,9 +222,10 @@ class Router {
      * @param HttpMethods $method Método por el cual se solicitará
      * @param callable $handlerFunction Función encargada del manejo de la solicitud
      */
-    private static function addRouteFunction( string $path, HttpMethods $method, callable $handlerFunction ): Route {
+    private static function addRouteFunction( string $path, HttpMethods $method, callable $handlerFunction, bool $canRecievePostJson ): Route {
         if( !Route::isRoutePathCorrect( $path ) ) throw new RouteFormatException();
         $route = new RouteFunction( $path, $handlerFunction, Router::$routeParamMatchers, Router::$dependenciesFactory );
+        if($canRecievePostJson) $route->recievePostJson();
         if( array_key_exists( $route->getRouteRegex(), Router::$routes ) ){
             if( array_key_exists($method->value, Router::$routes[ $route->getRouteRegex() ]) ) {
                 if( Router::$routes[ $route->getRouteRegex() ][ $method->value ] instanceof RouteController ){
