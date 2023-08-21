@@ -26,7 +26,7 @@ abstract class Route {
      * @var callable[]
      */
     protected array $dependenciesFactory;
-
+    protected array $metadata = [];
     /**
      * Instancia un objeto ruta
      * @param string $routePath Ruta a registrar
@@ -80,6 +80,13 @@ abstract class Route {
         return $this;
     }
     /**
+     * Agrega un valor al arreglo de metadatos de la ruta, estos metadatos pueden ser accedidos desde el objeto Request
+     */
+    public function addMetadata( string $key,  $value ): Route {
+        $this->metadata[$key] = $value;
+        return $this;
+    }
+    /**
      * Genera el matcher de la ruta a partir del formato de ruta registrada
      * @param string $routePath Ruta registrada
      * @param ParamPathMatchOccurence[] $matches Matches de las variables de la ruta
@@ -127,7 +134,7 @@ abstract class Route {
         }
         return !$open;
     }
-    protected function getParams( callable $function ): array {
+    public function getParams( callable $function ): array {
         $reflection = new ReflectionFunction( $function );
         return array_map( function(ReflectionParameter $parameter) {
             return [ 'name' => $parameter->getName(), 'type' => $parameter->getType()->getName() ];

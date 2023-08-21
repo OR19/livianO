@@ -40,6 +40,7 @@ class RouteFunction extends Route {
         $this->canRecievePostJson = true;
     }
     public function execute( Request $request, Response $response, array $dependenciasFactory ): void {
+        $request->setData('metadata', $this->metadata);
         if( $this->canRecievePostJson ) {
             $json = $this->getJsonPost();
             foreach( $json as $itemIndex => $itemValue )

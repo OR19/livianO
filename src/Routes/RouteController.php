@@ -30,6 +30,7 @@ abstract class RouteController extends Route {
 	public function execute(Request $request, Response $response, array $dependenciasFactory): void {
         $matches = [];
         $options = [];
+        $request->setData('metadata', $this->metadata);
         $reflection = $this->getFunction( $request->getURL(), $request->getMethod(), $matches, $options);
         if( $reflection == null ) {
             throw new ControllerMethodDoesntExistException("");
