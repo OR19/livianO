@@ -30,6 +30,7 @@ abstract class RouteController extends Route {
 	public function execute(Request $request, Response $response, array $dependenciasFactory): void {
         $matches = [];
         $options = [];
+        $request->setData('metadata', $this->metadata);
         $reflection = $this->getFunction( $request->getURL(), $request->getMethod(), $matches, $options);
         if( $reflection == null ) {
             throw new ControllerMethodDoesntExistException("");
@@ -40,8 +41,7 @@ abstract class RouteController extends Route {
             foreach( $json as $itemIndex => $itemValue )
                 $request->addPostParam( $itemIndex, $itemValue );
         }
-
-        $this->executeMiddlewares($request, $response);
+        if( !$this->executeMiddlewares($request, $response) ) return;
         $this->dependenciesFactory = $dependenciasFactory;
         $params = $this->generateInjectableParamsMethod( $reflection, $request, $response, $matches);
         $reflection->invokeArgs($this, $params);

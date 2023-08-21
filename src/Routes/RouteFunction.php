@@ -40,13 +40,13 @@ class RouteFunction extends Route {
         $this->canRecievePostJson = true;
     }
     public function execute( Request $request, Response $response, array $dependenciasFactory ): void {
+        $request->setData('metadata', $this->metadata);
         if( $this->canRecievePostJson ) {
             $json = $this->getJsonPost();
             foreach( $json as $itemIndex => $itemValue )
                 $request->addPostParam( $itemIndex, $itemValue );
         }
-
-        $this->executeMiddlewares($request, $response);
+        if( !$this->executeMiddlewares($request, $response) ) return;
         $this->dependenciesFactory = $dependenciasFactory;
         $injectablesParams = $this->generateInjectableParams( $this->function, $request, $response, $this->paramPathMatches );
 
