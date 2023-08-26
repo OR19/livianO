@@ -28,7 +28,7 @@ class Response {
     }
     /**
      * Realiza un echo de un json como respuesta
-     * @param array $json Arreglo JSON a aplicar json_encode
+     * @param mixed $json Elemento JSON a aplicar json_encode
      * @param int $statusCode [Opcional] Código de estado de la respuesta
      */
     public function sendJSON( mixed $json, int $statusCode = 200 ): void {
