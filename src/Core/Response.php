@@ -35,7 +35,7 @@ class Response {
         http_response_code($statusCode);
         header('Content-Type: application/json; charset=utf-8');
         if($ignore_invalid_utf8) echo json_encode( $json, JSON_INVALID_UTF8_IGNORE );
-        echo json_encode( $json );
+        else echo json_encode( $json );
     }
 }
 ?>
