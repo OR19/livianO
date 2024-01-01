@@ -31,10 +31,11 @@ class Response {
      * @param mixed $json Elemento JSON a aplicar json_encode
      * @param int $statusCode [Opcional] Código de estado de la respuesta
      */
-    public function sendJSON( mixed $json, int $statusCode = 200 ): void {
+    public function sendJSON( mixed $json, int $statusCode = 200, bool $ignore_invalid_utf8 = true ): void {
         http_response_code($statusCode);
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode( $json );
+        if($ignore_invalid_utf8) echo json_encode( $json, JSON_INVALID_UTF8_IGNORE );
+        else echo json_encode( $json );
     }
 }
 ?>
